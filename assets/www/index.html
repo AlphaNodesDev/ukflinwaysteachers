@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ukf Linways Teachers </title>
+
+    <script type="text/javascript" charset="utf-8" src="cordova-2.4.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      document.addEventListener("deviceready", onDeviceReady, false);
+
+      function onDeviceReady() {
+        cordova.plugins.permissions.requestPermission(
+          cordova.plugins.permissions.CAMERA,
+          function (status) {
+            if (status.hasPermission) {
+        
+          checkForNewVersion();
+            } else {
+              alert("Camera permission is required to use this feature.");
+            }
+          },
+          function (error) {
+            alert("Error requesting camera permission: " + error);
+          }
+        );
+      }
+
+      function openInAppBrowser() {
+  const targetUrl = 'https://ukf.linways.com';
+
+  const injectedCSS = '.main-header { width: 100%; box-shadow: 0 0 5px #999; background-color: #53c922; color: #fff; -webkit-user-select: none; -moz-user-select: none; user-select: none; }';
+
+  const injectedViewport = '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">';
+
+  const options = 'location=no,hidden=no,toolbar=no'; 
+
+  const inAppBrowserRef = cordova.InAppBrowser.open(targetUrl, '_blank', options);
+
+  inAppBrowserRef.addEventListener('loadstop', function() {
+    inAppBrowserRef.insertCSS({ code: injectedCSS });
+
+    inAppBrowserRef.executeScript({ code: "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'); document.head.appendChild(meta);" });
+  });
+}
+
+
+function opencomingsoon(){
+  const comingsoonPage = 'comingsoon.html';
+  window.location.href = comingsoonPage;
+}
+
+const newVersionPage = 'new-version.html';
+
+function checkForNewVersion() {
+  const currentVersion ='1.0';
+        const repoOwner = 'AlphaNodesDev';
+        const repoName = 'AR-TRESURE';
+        const token = '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';
+
+        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const latestVersion = data.tag_name;
+
+            if (currentVersion < latestVersion) {
+                window.location.href = newVersionPage;
+            }else if (currentVersion > latestVersion) {
+                opencomingsoon();
+            }else{
+                    openInAppBrowser();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    };
+
+
+
+
+    </script>
+    <script src="cordova.js"></script>
+  </head>
+  <body></body>
+</html>
